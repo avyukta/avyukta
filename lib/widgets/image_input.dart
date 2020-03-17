@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
+
+import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
+  final Function onSelectImage;
+  ImageInput(this.onSelectImage);
   @override
   _ImageInputState createState() => _ImageInputState();
 }
 
 class _ImageInputState extends State<ImageInput> {
   File _storedImage;
+
+  Future<void> _takePicture() async {
+    final imageFile = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 600,
+    );
+    setState(() {
+      _storedImage = imageFile;
+    });
+    final appDirectory = await syspath.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imageFile.path);
+    final savedImage = await imageFile.copy('${appDirectory.path}/$fileName');
+    widget.onSelectImage(savedImage);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -35,7 +56,7 @@ class _ImageInputState extends State<ImageInput> {
         ),
         Expanded(
             child: FlatButton.icon(
-          onPressed: () {},
+          onPressed: _takePicture,
           label: Text('Take Picture'),
           textColor: Theme.of(context).primaryColor,
           icon: Icon(Icons.camera),
