@@ -12,8 +12,10 @@ class AddPlaceScreen extends StatefulWidget {
 }
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
-  final _titleController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+
   File _pickedImage;
+
   void _selectImage(File pickedImage) {
     _pickedImage = pickedImage;
   }
@@ -44,6 +46,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
+                  ImageInput(_selectImage),
                   TextField(
                     decoration: InputDecoration(labelText: 'Title'),
                     controller: _titleController,
@@ -51,7 +54,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  ImageInput(_selectImage),
                 ],
               ),
             ),
